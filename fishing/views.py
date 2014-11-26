@@ -10,16 +10,16 @@ from flask.json import JSONEncoder
 from flask_oauthlib.client import OAuth
 from fishing import app, oauth
 
-registers = oauth.remote_app(
-    'registers',
-    consumer_key='c1aedf2d9fa74884930392850712c0a6',
-    consumer_secret='00952aff578e476b93c7a10e9a1cbb05',
+registry = oauth.remote_app(
+    'registry',
+    consumer_key=app.config['REGISTRY_CONSUMER_KEY'],
+    consumer_secret=app.config['REGISTRY_CONSUMER_SECRET'],
     request_token_params={'scope': 'person:view personal_licence:view personal_licence:add'},
-    base_url='http://localhost:5000',
+    base_url=app.config['REGISTRY_BASE_URL'],
     request_token_url=None,
     access_token_method='POST',
-    access_token_url='http://localhost:5000/oauth/token',
-    authorize_url='http://localhost:5000/oauth/authorize'
+    access_token_url='%s/oauth/token' % app.config['REGISTRY_BASE_URL'],
+    authorize_url='%s/oauth/authorize' % app.config['REGISTRY_BASE_URL']
 )
 
 #filters
@@ -39,9 +39,9 @@ def pad_reference(s):
     return " ".join(result)
 
 #auth helper
-@registers.tokengetter
+@registry.tokengetter
 def get_registers_oauth_token():
-    return session.get('registers_token')
+    return session.get('registry_token')
 
 #views
 @app.route("/")
@@ -51,7 +51,7 @@ def index():
 @app.route("/buy", methods=['GET', 'POST'])
 def buy():
 
-    if not session.get('registers_token', False):
+    if not session.get('registry_token', False):
         return redirect(url_for('verify'))
 
     order = None
@@ -60,8 +60,8 @@ def buy():
         order = Order.from_dict(order_data)
     else:
         #get the person associated with this token
-        about = registers.get('/about').data
-        person = registers.get(about['person'].replace(registers.base_url, '')).data
+        about = registry.get('/about').data
+        person = registry.get(about['person'].replace(registers.base_url, '')).data
         existing_licences = registers.get('/personal-licences').data
         disabled = False
         order = Order(dateutil.parser.parse(person['born_at']), existing_licences, disabled, app.config['BASE_URL'])
@@ -98,7 +98,7 @@ def pay():
                 'starts_at': '2013-01-01',
                 'ends_at': '2014-01-01'
                 }
-            response = registers.post('/personal-licences', data=data, format='json')
+            response = registry.post('/personal-licences', data=data, format='json')
             if response.status == 201:
                 flash('Licence granted', 'success')
                 session.pop('order', None)
@@ -111,7 +111,7 @@ def pay():
 def your_licences():
     if not session.get('registers_token', False):
         return redirect(url_for('verify'))
-    licences = registers.get('/personal-licences').data
+    licences = registry.get('/personal-licences').data
     return render_template('your-licences.html', licences=licences)
 
 @app.route("/licences")
@@ -136,14 +136,14 @@ def check():
 
 @app.route("/check/result")
 def check_result():
-    if not session.get('registers_token', False):
+    if not session.get('registry_token', False):
         return redirect(url_for('verify'))
 
     search = request.args.get('q', False)
     if not search:
         abort(404)
 
-    result = registers.get('/personal-licences/%s' % search.replace(' ', ''))
+    result = registry.get('/personal-licences/%s' % search.replace(' ', ''))
     licence = None
     if not result.status == 200 and result.status != 404:
         abort(result.status)
@@ -154,7 +154,7 @@ def check_result():
 
 @app.route('/verify')
 def verify():
-    return registers.authorize(callback=url_for('verified', _external=True))
+    return registry.authorize(callback=url_for('verified', _external=True))
 
 @app.route('/verified')
 def verified():
@@ -167,6 +167,6 @@ def verified():
         request.args['error_description']
         )
 
-    session['registers_token'] = (resp['access_token'], '')
+    session['registry_token'] = (resp['access_token'], '')
     return redirect(url_for('index'))
 
