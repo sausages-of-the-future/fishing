@@ -14,7 +14,7 @@ registry = oauth.remote_app(
     'registry',
     consumer_key=app.config['REGISTRY_CONSUMER_KEY'],
     consumer_secret=app.config['REGISTRY_CONSUMER_SECRET'],
-    request_token_params={'scope': 'person:view personal_licence:view personal_licence:add'},
+    request_token_params={'scope': 'person:view licence:view licence:add'},
     base_url=app.config['REGISTRY_BASE_URL'],
     request_token_url=None,
     access_token_method='POST',
@@ -61,8 +61,8 @@ def buy():
     else:
         #get the person associated with this token
         about = registry.get('/about').data
-        person = registry.get(about['person'].replace(registers.base_url, '')).data
-        existing_licences = registers.get('/personal-licences').data
+        person = registry.get(about['person'].replace(registry.base_url, '')).data
+        existing_licences = registry.get('/licences').data
         disabled = False
         order = Order(dateutil.parser.parse(person['born_at']), existing_licences, disabled, app.config['BASE_URL'])
         session['order'] = order.to_dict()
@@ -98,7 +98,7 @@ def pay():
                 'starts_at': '2013-01-01',
                 'ends_at': '2014-01-01'
                 }
-            response = registry.post('/personal-licences', data=data, format='json')
+            response = registry.post('/licences', data=data, format='json')
             if response.status == 201:
                 flash('Licence granted', 'success')
                 session.pop('order', None)
@@ -111,7 +111,7 @@ def pay():
 def your_licences():
     if not session.get('registers_token', False):
         return redirect(url_for('verify'))
-    licences = registry.get('/personal-licences').data
+    licences = registry.get('/licences').data
     return render_template('your-licences.html', licences=licences)
 
 @app.route("/licences")
@@ -143,7 +143,7 @@ def check_result():
     if not search:
         abort(404)
 
-    result = registry.get('/personal-licences/%s' % search.replace(' ', ''))
+    result = registry.get('/licences/%s' % search.replace(' ', ''))
     licence = None
     if not result.status == 200 and result.status != 404:
         abort(result.status)
@@ -159,7 +159,7 @@ def verify():
 @app.route('/verified')
 def verified():
 
-    resp = registers.authorized_response()
+    resp = registry.authorized_response()
 
     if resp is None:
         return 'Access denied: reason=%s error=%s' % (
