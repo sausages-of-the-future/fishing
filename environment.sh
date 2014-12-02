@@ -1,3 +1,4 @@
+export SETTINGS='config.DevelopmentConfig'
 export APP_ROOT='.'
 export SECRET_KEY='local-dev-not-secret'
 export CSRF_ENABLED=True
