@@ -5,7 +5,7 @@ import json
 import hashlib
 from order import Order
 import dateutil.parser
-from flask import Flask, request, redirect, render_template, url_for, session, flash, abort
+from flask import Flask, request, redirect, render_template, url_for, session, flash, abort, current_app
 from flask.json import JSONEncoder
 from flask_oauthlib.client import OAuth
 from fishing import app, oauth
@@ -26,7 +26,7 @@ registry = oauth.remote_app(
 @app.template_filter('reference_number')
 def reference_number_filter(s):
     split = s.split('/')
-    return split[len(split) - 1].upper()
+    return split[-1].upper()
 
 @app.template_filter('format_money')
 def format_money_filter(value):
@@ -94,10 +94,13 @@ def pay():
     if request.method == 'POST':
         if form.validate():
             data = {
-                'licence_type_uri': order.licence_type_uri(),
+                'type_uri': order.licence_type_uri(),
                 'starts_at': '2013-01-01',
-                'ends_at': '2014-01-01'
+                'ends_at': '2015-01-01'
                 }
+
+            current_app.logger.debug('posting to registry %s' % data)
+
             response = registry.post('/licences', data=data, format='json')
             if response.status == 201:
                 flash('Licence granted', 'success')
@@ -109,9 +112,11 @@ def pay():
 
 @app.route("/your-licences")
 def your_licences():
-    if not session.get('registers_token', False):
+    if not session.get('registry_token', False):
+        current_app.logger.debug('No registers token in session %s' % session)
         return redirect(url_for('verify'))
     licences = registry.get('/licences').data
+    current_app.logger.debug('Licences %s' % licences)
     return render_template('your-licences.html', licences=licences)
 
 @app.route("/licences")

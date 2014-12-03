@@ -11,8 +11,8 @@
         <p>Duration: {{order.duration}}</p>
         {{ render_field(form.card_name) }}
         {{ render_field(form.card_number) }}
-        {{ render_field(form.expires, type="date")}}
-        {{ render_field(form.security_code, type="time") }}
+        {{ render_field(form.expires)}}
+        {{ render_field(form.security_code) }}
         <button type="submit" class="expand">Make payment</button>
       </form>
     </div>

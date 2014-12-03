@@ -9,12 +9,12 @@
           {% for licence in licences %}
             <li>
               <h3>Fishing Rod Licence</h3>
-              <h4>{{licence.uri|reference_number|pad_reference}}</h4>
+              <h4>{{ licence.uri|reference_number|pad_reference }}</h4>
               <dl>
                 <dt>Starts</dt>
-                <dd>{{licence.starts_at}}</dd>
+                <dd>{{ licence.starts_at }}</dd>
                 <dt>Ends</dt>
-                <dd>{{licence.ends_at}}</dd>
+                <dd>{{ licence.ends_at }}</dd>
               </dl>
             </li>
           {% endfor %}
