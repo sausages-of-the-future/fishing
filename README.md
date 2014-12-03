@@ -1,4 +1,4 @@
-**Required configuration for this application**
+####Required configuration for this application
 
 Copy environment_private.sh.git  to environment_private.sh in the root of the project and set the following environment variables:
 
@@ -15,8 +15,7 @@ export REGISTRY_CONSUMER_SECRET='some secret'
 
 To generate values for the above, use the management command register-service in: [registry](https://github.com/sausages-of-the-future/registry)
 
-
-**Deploy to heroku**
+####Deploy to heroku
 
 Make sure you have [installed the heroku toolbelt](https://toolbelt.heroku.com/)
 
@@ -25,7 +24,6 @@ Make sure you have [installed the heroku toolbelt](https://toolbelt.heroku.com/)
 For example
 ```
 heroku config:set SETTINGS='config.Config'
-
 ```
 
 If you make changes, push to github first and then push to heroku master
