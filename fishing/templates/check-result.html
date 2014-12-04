@@ -8,14 +8,13 @@
         <li role="menuitem"><a href="{{url_for('check')}}">Check a licence</a></li>
         <li role="menuitem" class="current"><a href="#">Results</a></li>
       </ul>
-
       {% if licence %}
         <h1>Valid licence</h1>
         <dl>
           <dt>Valid between</dt>
-          <dd>{{licence.starts_at}} &mdash; {{licence.ends_at}}</dd>
+          <dd>{{ licence.starts_at }} &mdash; {{ licence.ends_at }}</dd>
           <dt>Licence type</dt>
-          <dd>{{licence.licence_type_uri}}</dd>
+          <dd><a href='{{licence.type_uri}}'>{{ licence.type_uri }}</a></dd>
         </dl>
        {% else %}
         <h1>Licence not found</h1>
