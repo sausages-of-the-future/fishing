@@ -1,13 +1,15 @@
 import os
 import jinja2
-import forms
 import json
 import hashlib
-from order import Order
 import dateutil.parser
 from flask import Flask, request, redirect, render_template, url_for, session, flash, abort, current_app
 from flask.json import JSONEncoder
-from flask_oauthlib.client import OAuth
+from flask_oauthlib.client import OAuth, OAuthException
+
+
+from fishing.forms import LicenceTypeForm, PaymentForm
+from fishing.order import Order
 from fishing import app, oauth
 
 registry = oauth.remote_app(
@@ -67,7 +69,7 @@ def buy():
         order = Order(dateutil.parser.parse(person['born_at']), existing_licences, disabled, app.config['BASE_URL'])
         session['order'] = order.to_dict()
 
-    form = forms.LicenceTypeForm(request.form)
+    form = LicenceTypeForm(request.form)
 
     if request.method == 'POST':
         if form.validate():
@@ -89,7 +91,7 @@ def pay():
         return redirect(url_for('index'))
 
     #form
-    form = forms.PaymentForm(request.form)
+    form = PaymentForm(request.form)
 
     if request.method == 'POST':
         if form.validate():
@@ -166,7 +168,9 @@ def verified():
 
     resp = registry.authorized_response()
 
-    if resp is None:
+    if resp is None or isinstance(resp, OAuthException):
+        # import pdb
+        # pdb.set_trace()
         return 'Access denied: reason=%s error=%s' % (
         request.args['error_reason'],
         request.args['error_description']

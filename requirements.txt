@@ -1,5 +1,5 @@
 Flask==0.10.1
-git+https://github.com/lepture/flask-oauthlib.git
+Flask-OAuthlib==0.8.0
 Flask-Session==0.1.1
 Jinja2==2.7.3
 MarkupSafe==0.23
@@ -8,13 +8,10 @@ WTForms==2.0.1
 Werkzeug==0.9.6
 argparse==1.2.2
 dateutils==0.6.6
+gunicorn==19.1.1
 itsdangerous==0.24
 oauthlib==0.7.2
-python-dateutil==2.2
-pytz==2014.9
+python-dateutil==2.3
+pytz==2014.10
 qrcode==5.1
 six==1.8.0
-wsgiref==0.1.2
-gunicorn==19.1.1
-eventlet==0.15.2
-greenlet==0.4.5
