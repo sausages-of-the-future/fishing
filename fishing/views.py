@@ -68,7 +68,8 @@ def buy():
         #get the person associated with this token
         about = registry.get('/about').data
         person = registry.get(about['person'].replace(registry.base_url, '')).data
-        existing_licences = registry.get('/licences').data
+        #existing_licences = registry.get('/licences').data
+        existing_licences = None
         disabled = False
         order = Order(dateutil.parser.parse(person['born_at']), existing_licences, disabled, app.config['BASE_URL'])
         session['order'] = order.to_dict()
@@ -101,6 +102,7 @@ def pay():
         if form.validate():
             data = {
                 'type_uri': order.licence_type_uri(),
+                'licence_type': order.licence_type,
                 'starts_at': '2013-01-01',
                 'ends_at': '2015-01-01'
                 }
