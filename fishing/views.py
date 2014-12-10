@@ -6,8 +6,6 @@ import dateutil.parser
 from flask import Flask, request, redirect, render_template, url_for, session, flash, abort, current_app
 from flask.json import JSONEncoder
 from flask_oauthlib.client import OAuth, OAuthException
-
-
 from fishing.forms import LicenceTypeForm, PaymentForm
 from fishing.order import Order
 from fishing import app, oauth
@@ -48,7 +46,7 @@ def get_registers_oauth_token():
 #views
 @app.route("/")
 def index():
-    return render_template('index.html')
+    return redirect("%s/fishing" % app.config['WWW_BASE_URL'])
 
 @app.route("/buy", methods=['GET', 'POST'])
 def buy():

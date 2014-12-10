@@ -6,6 +6,7 @@ class Config(object):
     REGISTRY_CONSUMER_KEY = os.environ['REGISTRY_CONSUMER_KEY']
     REGISTRY_CONSUMER_SECRET = os.environ['REGISTRY_CONSUMER_SECRET']
     BASE_URL = os.environ['BASE_URL']
+    WWW_BASE_URL = os.environ['WWW_BASE_URL']
 
 class DevelopmentConfig(Config):
     DEBUG = True
