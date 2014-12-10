@@ -3,11 +3,6 @@
 {% block content %}
   <div class="row">
     <div class="small-12 columns">
-      <ul class="breadcrumbs" role="menubar" aria-label="breadcrumbs">
-        <li role="menuitem"><a href="/">Fishing rod licensing</a></li>
-        <li role="menuitem"><a href="{{url_for('check')}}">Check a licence</a></li>
-        <li role="menuitem" class="current"><a href="#">Results</a></li>
-      </ul>
       {% if licence %}
         <h1>Valid licence</h1>
         <dl>

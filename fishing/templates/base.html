@@ -1,9 +1,9 @@
 <html>
   <head>
     <title>{% block title %}{% endblock%} | IDEALGOV</title>
-    <link rel="stylesheet" href="{{ url_for('static',filename='vendor/roboto-slab-fontface/roboto-slab-fontface.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static',filename='vendor/foundation/css/foundation.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{config.WWW_BASE_URL + '/static/vendor/roboto-slab-fontface/roboto-slab-fontface.css' }}">
+    <link rel="stylesheet" href="{{config.WWW_BASE_URL + '/static/vendor/foundation/css/foundation.css' }}">
+    <link rel="stylesheet" href="{{config.WWW_BASE_URL + '/static/css/main.css' }}">
     <script type="text/javascript" src="{{ url_for('static', filename='vendor/jquery/dist/jquery.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='vendor/foundation/js/foundation.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='vendor/foundation/js/foundation/foundation.alert.js') }}"></script>
@@ -38,12 +38,5 @@
     {% block content %}
 
     {% endblock %}
-    <div class="row meta">
-      <div class="small-12 columns">
-        <div>
-          <h3>About this service</h3>
-        </div>
-      </div>
-    </div>
   </body>
 </html>
