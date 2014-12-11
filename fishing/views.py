@@ -32,6 +32,12 @@ def reference_number_filter(s):
 def format_money_filter(value):
     return "{:,.2f}".format(value)
 
+@app.template_filter('format_date_time')
+def format_date_time_filter(value):
+    date = dateutil.parser.parse(value)
+    return date.strftime('%A %d %B %Y %H:%M')
+
+
 @app.template_filter('pad_reference')
 def pad_reference(s):
     n = 4

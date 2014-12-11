@@ -3,22 +3,28 @@
 {% block content %}
   <div class="row">
     <div class="small-12 columns">
+      <ul class="button-group right">
+        <li><a href="#" class="small button right">Save offline</a></li>
+        <li><a href="#" class="small button right">Print</a></li>
+      </ul>
       <h1>Your licences</h1>
       {% if licences %}
-        <ul>
-          {% for licence in licences %}
-            <li>
-              <h3>Fishing Rod Licence</h3>
-              <h4>{{ licence.uri|reference_number|pad_reference }}</h4>
-              <dl>
-                <dt>Starts</dt>
-                <dd>{{ licence.starts_at }}</dd>
-                <dt>Ends</dt>
-                <dd>{{ licence.ends_at }}</dd>
-              </dl>
-            </li>
-          {% endfor %}
-        </ul>
+        {% for licence in licences %}
+          <div class="panel ticket">
+            <h2>Fishing Rod Licence</h2>
+            <p class="validity">
+              {{ licence.starts_at|format_date_time}} &mdash; {{ licence.ends_at|format_date_time}}
+            </p>
+            <p>
+              <a href="{{url_for('check_result')}}?q={{licence.uri|reference_number}}">
+                <img src="https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{url_for('check_result')}}%3Fq={{licence.uri|reference_number}}&chld=L|1&choe=UTF-8" />
+              </a>
+            </p>
+            <p>
+              <span class="reference-number">{{ licence.uri|reference_number|pad_reference }}</span>
+            </p>
+          </div>
+        {% endfor %}
       {% else %}
         <p>
           No licences were found
