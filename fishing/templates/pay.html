@@ -1,14 +1,25 @@
 {% from "_formhelpers.html" import render_field %}
 {% extends "base.html" %}
-{% block title %}Fishing rod licence{% endblock%}
+{% block titlebar_service %}Payments{% endblock %}
+{% block title %}Make payment{% endblock%}
 {% block content %}
   <div class="row">
     <div class="small-12 columns">
-      <h1>Pay</h1>
+      <h1>Make payment</h1>
+         <div class="panel">
+          <p>Pay: IDEALGOV payment service</p>
+          <p>Total: &pound;{{order.calculate_total()|format_money}}</p>
+          <p>Licence: {{order.licence_name()}}</p>
+          <p>Duration: {{order.duration}}</p>
+        </div>
+     
       <form action="" method="post">
-        <p>Total: &pound;{{order.calculate_total()|format_money}}</p>
-        <p>Licence: {{order.licence_name()}}</p>
-        <p>Duration: {{order.duration}}</p>
+        <p>Choose a previously registered card</p>
+        <select>
+          <option></option>
+          <option>**** **** **** 1982</>
+        </select>
+        <p>Or enter a new one</p>
         {{ render_field(form.card_name) }}
         {{ render_field(form.card_number) }}
         {{ render_field(form.expires)}}
