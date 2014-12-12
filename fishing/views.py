@@ -25,8 +25,7 @@ registry = oauth.remote_app(
 #filters
 @app.template_filter('reference_number')
 def reference_number_filter(s):
-    split = s.split('/')
-    return split[-1].upper()
+    return s.upper()
 
 @app.template_filter('format_money')
 def format_money_filter(value):
