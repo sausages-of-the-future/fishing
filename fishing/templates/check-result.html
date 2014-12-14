@@ -7,9 +7,9 @@
         <h1>Valid licence</h1>
         <dl>
           <dt>Valid between</dt>
-          <dd>{{ licence.starts_at }} &mdash; {{ licence.ends_at }}</dd>
+          <dd>{{ licence.fields.validFrom }} &mdash; {{ licence.fields.validUntil }}</dd>
           <dt>Licence type</dt>
-          <dd><a href='{{licence.type_uri}}'>{{ licence.type_uri }}</a></dd>
+          <dd><a href='/{{ licence.tags[0] }}'>{{ licence.tags[0] }}</a></dd>
         </dl>
        {% else %}
         <h1>Licence not found</h1>
