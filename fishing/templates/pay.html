@@ -1,24 +1,23 @@
 {% from "_formhelpers.html" import render_field %}
 {% extends "base.html" %}
-{% block titlebar_service %}Payments{% endblock %}
-{% block title %}Make payment{% endblock%}
+{% block titlebar_service %}Payments service{% endblock %}
+{% block title %}Make payment service{% endblock%}
 {% block content %}
   <div class="row">
     <div class="small-12 columns">
-      <h1>Make payment</h1>
+         <h3>Payment details</h3>
          <div class="panel">
-          <p>Pay: IDEALGOV payment service</p>
           <p>Total: &pound;{{order.calculate_total()|format_money}}</p>
-          <p>Licence: {{order.licence_name()}}</p>
-          <p>Duration: {{order.duration}}</p>
+          <p>Item: {{order.licence_name()}} licence &mdash; {{order.duration}}</p>
+          <p>Service: Fishing service &mdash; Department for the Environment</p>
         </div>
       <form action="" method="post">
-        <p>Choose a previously registered card</p>
+        <p>Choose a previously registered card:</p>
         <select>
           <option></option>
           <option>**** **** **** 1982</>
         </select>
-        <p>Or enter a new one</p>
+        <p>Or enter a new one:</p>
         {{ render_field(form.card_name) }}
         {{ render_field(form.card_number) }}
         {{ render_field(form.expires)}}
