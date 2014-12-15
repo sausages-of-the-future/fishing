@@ -41,8 +41,7 @@ class Order():
 
     @property
     def live_licence_count(self):
-        return 1
-        #return len(self._existing_licences)
+        return len(self._existing_licences)
 
     @property
     def concession_type(self):

@@ -14,15 +14,14 @@
           <div class="panel ticket">
             <h2>Fishing Rod Licence</h2>
             <p class="validity">
-              {{ licence.fields.validFrom|format_date_time}} &mdash; {{ licence.fields.validFrom|format_date_time}}
+              {{ licence.starts_at|format_date_time}} &mdash; {{ licence.ends_at|format_date_time}}
             </p>
             <p>
-              <a href="{{url_for('check_result')}}?q={{licence._id}}">
-                <img src="https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{url_for('check_result')}}%3Fq={{licence._id}}&chld=L|1&choe=UTF-8" />
-              </a>
+              <a href="{{url_for('check_result')}}?q={{licence.uri|reference_number}}">
+-                <img src="https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{url_for('check_result')}}%3Fq={{licence.uri|reference_number}}&chld=L|1&choe=UTF-8" />
             </p>
             <p>
-              <span class="reference-number">{{ licence._id | reference_number | pad_reference }}</span>
+              <span class="reference-number">{{ licence.uri|reference_number|pad_reference }}</span>
             </p>
           </div>
         {% endfor %}
