@@ -54,10 +54,16 @@ def get_registers_oauth_token():
 def index():
     return redirect("%s/fishing" % app.config['WWW_BASE_URL'])
 
-@app.route("/buy", methods=['GET', 'POST'])
+@app.route("/buy")
 def buy():
+    session.clear()
+    return redirect(url_for('choose_type'))
+
+@app.route("/choose-type", methods=['GET', 'POST'])
+def choose_type():
 
     if not session.get('registry_token', False):
+        session['resume_url'] = 'choose_type'
         return redirect(url_for('verify'))
 
     order = None
@@ -120,9 +126,11 @@ def pay():
 
 @app.route("/your-licences")
 def your_licences():
+
     if not session.get('registry_token', False):
-        current_app.logger.debug('No registers token in session %s' % session)
+        session['resume_url'] = 'your_licences'
         return redirect(url_for('verify'))
+
     licences = registry.get('/licences').data
     current_app.logger.debug('Licences %s' % licences)
     return render_template('your-licences.html', licences=licences)
@@ -183,5 +191,9 @@ def verified():
         )
 
     session['registry_token'] = (resp['access_token'], '')
-    return redirect(url_for('index'))
+    if session.get('resume_url'):
+        return redirect(url_for(session.get('resume_url')))
+    else:
+        return redirect(url_for('index'))
+
 
