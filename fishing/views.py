@@ -175,10 +175,10 @@ def check_result():
 
 @app.route('/verify')
 def verify():
-    scheme = 'https'
-    if os.environ.get('OAUTHLIB_INSECURE_TRANSPORT', False) == 'true':
-        scheme = 'http'
-    return registry.authorize(callback=url_for('verified', _scheme=scheme, _external=True))
+    _scheme = 'https'
+    #if os.environ.get('OAUTHLIB_INSECURE_TRANSPORT', False) == 'true':
+        #_scheme = 'http'
+    return registry.authorize(callback=url_for('verified', _scheme=_scheme, _external=True))
 
 @app.route('/verified')
 def verified():
