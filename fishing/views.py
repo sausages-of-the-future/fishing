@@ -175,7 +175,10 @@ def check_result():
 
 @app.route('/verify')
 def verify():
-    return registry.authorize(callback=url_for('verified', _scheme='https', _external=True))
+    scheme = 'https'
+    if os.environ.get('OAUTHLIB_INSECURE_TRANSPORT', False) == 'true':
+        scheme = 'http'
+    return registry.authorize(callback=url_for('verified', _scheme=scheme, _external=True))
 
 @app.route('/verified')
 def verified():
@@ -183,8 +186,6 @@ def verified():
     resp = registry.authorized_response()
 
     if resp is None or isinstance(resp, OAuthException):
-        # import pdb
-        # pdb.set_trace()
         return 'Access denied: reason=%s error=%s' % (
         request.args['error_reason'],
         request.args['error_description']
