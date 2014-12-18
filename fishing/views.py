@@ -175,7 +175,7 @@ def check_result():
 
 @app.route('/verify')
 def verify():
-    return registry.authorize(callback=url_for('verified', _external=True))
+    return registry.authorize(callback=url_for('verified', _scheme='https', _external=True))
 
 @app.route('/verified')
 def verified():
