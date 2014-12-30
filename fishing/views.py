@@ -181,8 +181,7 @@ def verify():
     return registry.authorize(callback=url_for('verified', _scheme=_scheme, _external=True))
 
 @app.route('/verified')
-def verified():
-
+def verified(): 
     resp = registry.authorized_response()
 
     if resp is None or isinstance(resp, OAuthException):
