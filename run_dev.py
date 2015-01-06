@@ -1,4 +1,3 @@
-#!/usr/bin/python
 from fishing import app
 import os
 
