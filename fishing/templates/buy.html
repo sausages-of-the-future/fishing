@@ -37,7 +37,7 @@
          {{form.licence_type}}
          {{form.duration.label}}
          {{form.duration}}
-         {{ render_field(form.start_date) }}
+         {{ render_field(form.start_date, type="date") }}
          {{ render_field(form.start_time, type="time") }}
          <button type="submit" class="button expand">Next</button> 
       </form>
