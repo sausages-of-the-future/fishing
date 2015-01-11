@@ -122,7 +122,7 @@ def choose_type():
                 app.config['PAYMENT_URL'],
                 urllib.parse.urlencode(
                     {'total': order.calculate_total(),
-                    'item': '%s licence - %s' % (order.licence_name(), order.duration),
+                    'description': '%s licence - %s' % (order.licence_name(), order.duration),
                     'service': 'Fishing service - Department for the Environment',
                     'return_uri': return_uri}))  # ouch
 
