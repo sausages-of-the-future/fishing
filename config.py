@@ -7,6 +7,8 @@ class Config(object):
     REGISTRY_CONSUMER_SECRET = os.environ['REGISTRY_CONSUMER_SECRET']
     BASE_URL = os.environ['BASE_URL']
     WWW_BASE_URL = os.environ['WWW_BASE_URL']
+    REDISCLOUD_URL = os.environ['REDISCLOUD_URL']
+    PAYMENT_URL = os.environ['PAYMENT_URL']
 
 class DevelopmentConfig(Config):
     DEBUG = True

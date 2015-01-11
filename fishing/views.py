@@ -3,12 +3,32 @@ import jinja2
 import json
 import hashlib
 import dateutil.parser
-from flask import Flask, request, redirect, render_template, url_for, session, flash, abort, current_app
+import urllib
+
+from flask import (
+    Flask,
+    request,
+    redirect,
+    render_template,
+    url_for,
+    session,
+    flash,
+    abort,
+    current_app
+)
+
 from flask.json import JSONEncoder
 from flask_oauthlib.client import OAuth, OAuthException
+
 from fishing.forms import LicenceTypeForm, PaymentForm
 from fishing.order import Order
-from fishing import app, oauth
+
+from fishing import (
+    app,
+    oauth,
+    redis_client
+)
+
 
 registry = oauth.remote_app(
     'registry',
@@ -21,6 +41,11 @@ registry = oauth.remote_app(
     access_token_url='%s/oauth/token' % app.config['REGISTRY_BASE_URL'],
     authorize_url='%s/oauth/authorize' % app.config['REGISTRY_BASE_URL']
 )
+
+def send_location_data(origin, message):
+    data = {"application": origin, "message": message}
+    app.logger.info('sending location data %s' % data)
+    redis_client.publish('location', json.dumps(data))
 
 #filters
 @app.template_filter('reference_number')
@@ -65,6 +90,10 @@ def choose_type():
     if not session.get('registry_token', False):
         session['resume_url'] = 'choose_type'
         return redirect(url_for('verify'))
+    else:
+        # auth call back
+        message = request.referrer.split('?')[0]
+        send_location_data(message, app.config['BASE_URL'])
 
     order = None
     order_data = session.get('order', None)
@@ -88,7 +117,16 @@ def choose_type():
             order.duration = form.duration.data
             order.starts_at = None
             session['order'] = order.to_dict()
-            return redirect(url_for('pay'))
+            return_uri = '%s%s' % (app.config['BASE_URL'], url_for('complete_order'))
+            payment_url = '%s/start?%s' % (
+                app.config['PAYMENT_URL'],
+                urllib.parse.urlencode(
+                    {'total': order.calculate_total(),
+                    'item': '%s licence - %s' % (order.licence_name(), order.duration),
+                    'service': 'Fishing service - Department for the Environment',
+                    'return_uri': return_uri}))  # ouch
+
+            return redirect(payment_url)
 
     return render_template('buy.html', order=order, form=form)
 
@@ -117,12 +155,40 @@ def pay():
 
             response = registry.post('/licences', data=data, format='json')
             if response.status == 201:
+
+                send_location_data(app.config['BASE_URL'], 'payment service request made')
+
                 flash('Licence granted', 'success')
                 session.pop('order', None)
                 return redirect(url_for('your_licences'))
             else:
                 flash('Something went wrong', 'error')
     return render_template('pay.html', order=order, form=form)
+
+
+
+@app.route("/complete-order", methods=["GET"])
+def complete_order():
+    order_data = session.get('order', None)
+    if order_data:
+        order = Order.from_dict(order_data)
+    else:
+        return redirect(url_for('index'))
+
+    data = {
+        'type_uri': order.licence_type_uri(),
+        'licence_type': order.licence_type,
+        'starts_at': '2013-01-01',
+        'ends_at': '2015-01-01'
+    }
+    response = registry.post('/licences', data=data, format='json')
+    if response.status == 201:
+        flash('Licence granted', 'success')
+        session.pop('order', None)
+        return redirect(url_for('your_licences'))
+    else:
+        flash('Something went wrong', 'error')
+
 
 @app.route("/your-licences")
 def your_licences():
@@ -178,10 +244,14 @@ def verify():
     _scheme = 'https'
     if os.environ.get('OAUTHLIB_INSECURE_TRANSPORT', False) == 'true':
         _scheme = 'http'
+
+    message ='redirecting to %s for authorisation' % registry.base_url
+    send_location_data(app.config['BASE_URL'], message)
+
     return registry.authorize(callback=url_for('verified', _scheme=_scheme, _external=True))
 
 @app.route('/verified')
-def verified(): 
+def verified():
     resp = registry.authorized_response()
 
     if resp is None or isinstance(resp, OAuthException):
