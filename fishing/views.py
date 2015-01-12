@@ -90,10 +90,10 @@ def choose_type():
     if not session.get('registry_token', False):
         session['resume_url'] = 'choose_type'
         return redirect(url_for('verify'))
-    else:
-        # auth call back
-        message = request.referrer.split('?')[0]
-        send_location_data(message, app.config['BASE_URL'])
+    # else:
+    #     # auth call back
+    #     message = request.referrer.split('?')[0]
+    #     send_location_data(message, app.config['BASE_URL'])
 
     order = None
     order_data = session.get('order', None)
