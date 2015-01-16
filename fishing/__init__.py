@@ -8,7 +8,6 @@ app.config.from_object(os.environ.get('SETTINGS'))
 oauth = OAuth(app)
 
 import json
-import redis
 
 from messenger import Connector
 locator = Connector(app)
