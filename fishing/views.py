@@ -25,8 +25,7 @@ from fishing.order import Order
 
 from fishing import (
     app,
-    oauth,
-    redis_client
+    oauth
 )
 
 
@@ -41,11 +40,6 @@ registry = oauth.remote_app(
     access_token_url='%s/oauth/token' % app.config['REGISTRY_BASE_URL'],
     authorize_url='%s/oauth/authorize' % app.config['REGISTRY_BASE_URL']
 )
-
-def send_location_data(origin, message):
-    data = {"application": origin, "message": message}
-    app.logger.info('sending location data %s' % data)
-    redis_client.publish('location', json.dumps(data))
 
 #filters
 @app.template_filter('reference_number')
@@ -90,10 +84,6 @@ def choose_type():
     if not session.get('registry_token', False):
         session['resume_url'] = 'choose_type'
         return redirect(url_for('verify'))
-    # else:
-    #     # auth call back
-    #     message = request.referrer.split('?')[0]
-    #     send_location_data(message, app.config['BASE_URL'])
 
     order = None
     order_data = session.get('order', None)
@@ -155,9 +145,6 @@ def pay():
 
             response = registry.post('/licences', data=data, format='json')
             if response.status == 201:
-
-                send_location_data(app.config['BASE_URL'], 'payment service request made')
-
                 flash('Licence granted', 'success')
                 session.pop('order', None)
                 return redirect(url_for('your_licences'))
@@ -244,9 +231,6 @@ def verify():
     _scheme = 'https'
     if os.environ.get('OAUTHLIB_INSECURE_TRANSPORT', False) == 'true':
         _scheme = 'http'
-
-    message ='redirecting to %s for authorisation' % registry.base_url
-    send_location_data(app.config['BASE_URL'], message)
 
     return registry.authorize(callback=url_for('verified', _scheme=_scheme, _external=True))
 

@@ -1,13 +1,15 @@
 import os
-from flask import Flask
+from flask import Flask, request_finished
 from flask_oauthlib.client import OAuth
-import redis
 
 #app
 app = Flask(__name__)
 app.config.from_object(os.environ.get('SETTINGS'))
 oauth = OAuth(app)
 
-redis_client = redis.from_url(app.config['REDISCLOUD_URL'])
+import json
+
+from messenger import Connector
+locator = Connector(app)
 
 from fishing import views

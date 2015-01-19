@@ -6,3 +6,4 @@ lib
 local_config.py
 fishing/static/qrcodes/*.png
 environment_private.sh
+.DS_Store
