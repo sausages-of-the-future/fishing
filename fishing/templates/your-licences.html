@@ -4,23 +4,45 @@
 {% block content %}
   <div class="row">
     <div class="small-12 columns">
-      <ul class="button-group even-2">
-        <li><a href="#" class="small button right">Save offline</a></li>
-        <li><a href="#" class="small button right">Print</a></li>
+      <ul>
+        <li>
+          <a href="#">
+            <img src="{{url_for('static', filename='images/save_icon.png')}}" width="25"/>
+            Save offline
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <img src="{{url_for('static', filename='images/print_icon.png')}}" width="25"/>
+            Print
+          </a>
+        </li>
       </ul>
       {% if licences %}
         {% for licence in licences %}
           <div class="panel ticket">
-            <h2>Fishing Rod Licence</h2>
+            <h2>
+              <img src="{{url_for('static', filename='images/crest_grey.png')}}"/>
+              Licence Registry
+            </h2>
+            <p>
+                <a href="{{url_for('check_result')}}?q={{licence.uri|reference_number}}">
+                  <img src="https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{url_for('check_result')}}%3Fq={{licence.uri|reference_number}}&chld=L|1&choe=UTF-8" />
+                </a>
+                <span class="reference-number">{{ licence.uri|reference_number|pad_reference }}</span>
+            </p>
+            <h3>Fishing Rod Licence</h3>
             <p class="validity">
-              {{ licence.starts_at|format_date_time}} &mdash; {{ licence.ends_at|format_date_time}}
+              <dl class="inline">
+                <dt>Valid from: </dt>
+                <dd>{{ licence.starts_at|format_date_time}}</dd>
+                <dt>Valid to: </dt>
+                <dd>{{ licence.ends_at|format_date_time}}</dd>
+              </dl>
             </p>
-            <p>
-              <a href="{{url_for('check_result')}}?q={{licence.uri|reference_number}}">
-                <img src="https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{url_for('check_result')}}%3Fq={{licence.uri|reference_number}}&chld=L|1&choe=UTF-8" />
-            </p>
-            <p>
-              <span class="reference-number">{{ licence.uri|reference_number|pad_reference }}</span>
+            
+            <p class="ticket-footer">
+              This information is maintained by the Licence Registry
             </p>
           </div>
         {% endfor %}
