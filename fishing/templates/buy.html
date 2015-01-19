@@ -8,7 +8,6 @@
       <h1>Buy a fishing rod licence</h1>
       <ul class="verified-facts">
         <li>
-          <span>&#10003;</span>
           {% if order.concession_type == 'disabled' %}
             Disabled concession
           {% elif order.concession_type == 'senior' %}
@@ -20,7 +19,6 @@
           {% endif %}
         </li>
         <li>
-          <span>&#10003;</span> 
           {% if order.live_licence_count == 0%}
             No existing licences
           {% else %}
