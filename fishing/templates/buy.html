@@ -33,10 +33,10 @@
         </li>
       </ul>
       <form action="" method="post">
-         {{form.licence_type.label}}
-         {{form.licence_type}}
-         {{form.duration.label}}
-         {{form.duration}}
+         <h3>Licence type</h3>
+         {{form.licence_type(class_="radio")}}
+         <h3>Duration</h3>
+         {{form.duration(class_="radio")}}
          {{ render_field(form.start_date, type="date") }}
          {{ render_field(form.start_time, type="time") }}
          <button type="submit" class="button expand">Next</button> 

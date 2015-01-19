@@ -15,7 +15,7 @@
   <body>
     <div class="header service">
       <nav class="top-bar" data-topbar>
-        <h1><a href="/" class="iglogo">IG</a> <a href="/">{% block titlebar_service %}Fishing{% endblock %}</a></h1>
+        <h1 class="title"><img id="header_crown" src="{{ config.WWW_BASE_URL + '/static/images/crown_white.png'}}"/>{% block header_title %}<a href="/">{% block titlebar_service %}Fishing{% endblock %}</a>{% endblock %}</h1>
       </nav>
     </div>
 
