@@ -17,3 +17,4 @@ qrcode==5.1
 six==1.8.0
 blinker==1.3
 -e git+https://github.com/ashimali/messenger.git#egg=messenger
+raven==5.1.1
