@@ -185,7 +185,6 @@ def your_licences():
         return redirect(url_for('verify'))
 
     licences = registry.get('/licences').data
-    current_app.logger.debug('Licences %s' % licences)
     return render_template('your-licences.html', licences=licences)
 
 @app.route("/licences")
