@@ -25,7 +25,8 @@ from fishing.order import Order
 
 from fishing import (
     app,
-    oauth
+    oauth,
+    locator
 )
 
 
@@ -84,6 +85,8 @@ def choose_type():
     if not session.get('registry_token', False):
         session['resume_url'] = 'choose_type'
         return redirect(url_for('verify'))
+
+    locator.send_message({"active": "fishing"})
 
     order = None
     order_data = session.get('order', None)
@@ -183,6 +186,8 @@ def your_licences():
     if not session.get('registry_token', False):
         session['resume_url'] = 'your_licences'
         return redirect(url_for('verify'))
+
+    locator.send_message({"active": "fishing"})
 
     licences = registry.get('/licences').data
     return render_template('your-licences.html', licences=licences)

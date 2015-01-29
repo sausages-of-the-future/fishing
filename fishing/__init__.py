@@ -13,7 +13,7 @@ if 'SENTRY_DSN' in os.environ:
 
 import json
 
-from messenger import Connector
-locator = Connector(app)
+from messenger import Locator
+locator = Locator(app)
 
 from fishing import views
