@@ -249,6 +249,7 @@ def verified():
         )
 
     session['registry_token'] = (resp['access_token'], '')
+    session['refresh_token'] = resp['refresh_token']
     if session.get('resume_url'):
         return redirect(url_for(session.get('resume_url')))
     else:
