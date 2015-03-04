@@ -148,7 +148,7 @@ def pay():
 
             response = registry.post('/licences', data=data, format='json')
             if response.status == 201:
-                flash('Licence granted', 'success')
+                flash('Your new licence has been granted', 'success')
                 session.pop('order', None)
                 return redirect(url_for('your_licences'))
             else:
@@ -173,7 +173,7 @@ def complete_order():
     }
     response = registry.post('/licences', data=data, format='json')
     if response.status == 201:
-        flash('Licence granted', 'success')
+        flash('Your new licence has been granted', 'success')
         session.pop('order', None)
         return redirect(url_for('your_licences'))
     else:

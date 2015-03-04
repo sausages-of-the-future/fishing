@@ -2,36 +2,35 @@
 {% block title %}Your fishing licences{% endblock%}
 {% block titlebar_service %}Your fishing licences{% endblock %}
 {% block content %}
+
   <div class="row">
     <div class="small-12 columns">
-      <ul>
-        <li>
-          <a href="#">
-            <img src="{{url_for('static', filename='images/save_icon.png')}}" width="25"/>
-            Save offline
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <img src="{{url_for('static', filename='images/print_icon.png')}}" width="25"/>
-            Print
-          </a>
-        </li>
-      </ul>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      
+            {% for category, message in messages %}
+            <div data-alert class="alert-box {% if category == 'error'%}alert{% else %}{{ category }}{% endif %}">
+                {{ message }}
+              </div>
+            {% endfor %}
+            
+      {% endif %}
+    {% endwith %}
+
       {% if licences %}
         {% for licence in licences %}
           <div class="panel ticket">
             <h2>
               <img src="{{url_for('static', filename='images/crest_grey.png')}}"/>
-              Licence Registry
+              HM Government
             </h2>
+            <h3>Fishing Rod Licence</h3>
             <p>
                 <a href="{{url_for('check_result')}}?q={{licence.uri|reference_number}}">
                   <img src="https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{url_for('check_result')}}%3Fq={{licence.uri|reference_number}}&chld=L|1&choe=UTF-8" />
                 </a>
                 <span class="reference-number">{{ licence.uri|reference_number|pad_reference }}</span>
             </p>
-            <h3>Fishing Rod Licence</h3>
             <p class="validity">
               <dl>
                 <dt>Valid from: </dt>
@@ -40,12 +39,25 @@
                 <dd>{{ licence.ends_at|format_date_time}}</dd>
               </dl>
             </p>
-            
-            <p class="ticket-footer">
-              This information is maintained by the Licence Registry
-            </p>
           </div>
-        {% endfor %}
+            
+              <ul class="save-print">
+                <li>
+                  <a href="#">
+                    <img src="{{url_for('static', filename='images/save_icon.png')}}" width="25"/>
+                    Save offline
+                  </a>
+                </li>
+                <li>
+                  <a href="#">
+                    <img src="{{url_for('static', filename='images/print_icon.png')}}" width="25"/>
+                    Print
+                  </a>
+                </li>
+              </ul> 
+          
+      {% endfor %}
+
       {% else %}
         <p>
           No licences were found
