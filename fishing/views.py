@@ -171,6 +171,7 @@ def complete_order():
         'starts_at': '2013-01-01',
         'ends_at': '2015-01-01'
     }
+
     response = registry.post('/licences', data=data, format='json')
     if response.status == 201:
         flash('Your new licence has been granted', 'success')

@@ -24,15 +24,15 @@
               <img src="{{url_for('static', filename='images/crest_grey.png')}}"/>
               HM Government
             </h2>
+            <p>
+              <a href="{{url_for('check_result')}}?q={{licence.uri|reference_number}}">
+                <img src="{{url_for('static', filename='images/barcode.png')}}" width="100%" />
+              </a>
+              <span class="reference-number">{{ licence.uri|reference_number|pad_reference }}</span>
+            </p>
             <h3>Fishing Rod Licence</h3>
             <p>
-                <a href="{{url_for('check_result')}}?q={{licence.uri|reference_number}}">
-                  <img src="https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{url_for('check_result')}}%3Fq={{licence.uri|reference_number}}&chld=L|1&choe=UTF-8" />
-                </a>
-                <span class="reference-number">{{ licence.uri|reference_number|pad_reference }}</span>
-            </p>
-            <p class="validity">
-              <dl>
+              <dl class="validity">
                 <dt>Valid from: </dt>
                 <dd>{{ licence.starts_at|format_date_time}}</dd>
                 <dt>Valid to: </dt>
