@@ -176,9 +176,10 @@ def complete_order():
     if response.status == 201:
         flash('Your new licence has been granted', 'success')
         session.pop('order', None)
-        return redirect(url_for('your_licences'))
     else:
         flash('Something went wrong', 'error')
+
+    return redirect(url_for('your_licences'))
 
 
 @app.route("/your-licences")
